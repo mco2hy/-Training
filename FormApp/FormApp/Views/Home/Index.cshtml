@@ -1,0 +1,89 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title>Sayfa Başlığı</title>
+    <script>
+        function Gonder() {
+            //var fullname = document.getElementById("FullName").value();
+            //var email = document.getElementById("Email").value();
+            //var message = document.getElementById("Message").value();
+
+            //Jquery -- ##
+            var fullName = $("#FullName").val();
+            var email = $("#Email").val();
+            var message = $("#Message").val();
+            //Jquery -- ##
+
+            if (fullName.length < 2 || fullName.length > 151) {
+                alert("Adınız 2 karakterden küçük 150 karakterden fazla olamaz, tatlım.. :* <3");
+                return;
+            }
+            else if (email.length < 6 || email.length > 346) {
+                alert("E-Posta adresiniz 6 karakterden küçük 345 karakterden fazla olamaz, tatlım.. :* <3");
+                return;
+            }
+            else if (message.length < 2 || message.length > 1025) {
+                alert("Mesajınız 2 karakterden küçük 1024 karakterden fazla olamaz, tatlım.. :* <3");
+                return;
+            }
+
+            $("#Form").hide();
+            $("#Sending").show();
+
+            //JavaScript -- !
+            var data = {
+                FullName: fullName,
+                Email: email,
+                Message: message
+            };
+            //JavaScript -- !
+
+            var json = JSON.stringify(data);
+
+            $.ajax({
+                type: "POST",
+                url: "/Contact/Send",
+                data: json,
+                success: gonderCallBack,
+                dataType: "json",
+                contentType: 'application/json'
+            });
+
+            //document.getElementById("JSON").innerHTML = json;
+
+            //Jquery -- ##
+            //$("#JSON").html(json);
+            //Jquery -- ##
+        }
+
+        function gonderCallBack(result) {
+            $("#Sending").hide();
+            $("#Sent").show();
+            console.log(result);
+        }
+    </script>
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="Form">
+        <form>
+            <input type="text" id="FullName" placeholder="Adınız" />
+            <br />
+            <input type="text" id="Email" placeholder="E-posta adresiniz" />
+            <br />
+            <textarea id="Message" placeholder="Mesajınız..."></textarea>
+            <br />
+            <input type="button" value="Gönder" onclick="Gonder();" />
+        </form>
+    </div>
+<div style="display: none;" id="Sending">
+    <h3>Mesaj Gönderiliyor...</h3>
+</div>
+<div style="display: none;" id="Sent">
+    <h3>Mesaj Gönderildi...</h3>
+</div>
+</body>
+</html>
